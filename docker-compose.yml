@@ -23,8 +23,8 @@ services:
     build:
       context: app
       # uncomment following lines for team edition or change UID/GID
-      # args:
-      #   - edition=team
+      args:
+        - edition=team
       #   - PUID=1000
       #   - PGID=1000
     restart: unless-stopped
@@ -53,12 +53,20 @@ services:
 
   web:
     build: web
+    container_name: mm_web
+    expose:
+      - "80"
     ports:
-      - "80:80"
-      - "443:443"
+      - "10086:80"
+      - "10443:443"
     read_only: true
     restart: unless-stopped
     volumes:
       # This directory must have cert files if you want to enable SSL
       - ./volumes/web/cert:/cert:ro
       - /etc/localtime:/etc/localtime:ro
+
+networks:
+  default:
+    external:
+      name: devops
